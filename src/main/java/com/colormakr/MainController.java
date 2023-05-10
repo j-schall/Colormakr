@@ -205,10 +205,34 @@ public class MainController implements Initializable {
                 } else if (savedColor5.getStyle().equals("")) {
                     savedColor5.setStyle("-fx-background-color: " + color + ";");
                 }
+                mainStmt.close();
 
                 AnchorPane[] panes = {savedColor1, savedColor2, savedColor3, savedColor4, savedColor5};
 
-                for (int i )
+                String displayRowCmd = "SELECT COUNT(*)";
+                ResultSet resultSet = mainStmt.executeQuery(displayRowCmd);
+
+                while(resultSet.next()) {
+                    int rows = resultSet.getInt(1);
+                    if (rows > 5) {
+
+                    }
+                }
+
+                for (AnchorPane pane : panes) {
+                    if (!pane.getStyle().equals("")) {
+                        Timeline line = new Timeline(new KeyFrame(Duration.millis(200), e -> {
+                            String hex = txtFieldHex.getText();
+
+                            Platform.runLater(() -> {
+                                saveColor(hex);
+                                pane.setStyle("-fx-background-color: " + hex + ";");
+                            });
+                        }));
+                    } else {
+                        break;
+                    }
+                }
 
                 /*
                 Timeline line = new Timeline(new KeyFrame(Duration.millis(200), e -> {

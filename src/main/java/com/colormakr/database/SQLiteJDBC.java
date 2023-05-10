@@ -8,7 +8,7 @@ public class SQLiteJDBC {
         Connection conn;
         try {
             Class.forName("org.sqlite.JDBC");
-            conn = DriverManager.getConnection("jdbc:sqlite:C:\\Users\\schal\\IdeaProjects\\ColorPicker\\src\\main\\java\\com\\colorpicker\\database\\colors.db");
+            conn = DriverManager.getConnection("jdbc:sqlite:C:\\Users\\schal\\IdeaProjects\\Colormakr\\src\\main\\java\\com\\colormakr\\database\\colors.db");
             return conn;
         } catch (Exception e) {
             e.printStackTrace();

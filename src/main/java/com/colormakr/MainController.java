@@ -23,13 +23,10 @@ import java.util.ResourceBundle;
 public class MainController implements Initializable {
     @FXML
     private ColorPicker colorPicker;
-
     @FXML
     private TextField txtFieldHex;
-
     @FXML
     private TextField txtFieldRGB;
-
     @FXML
     private AnchorPane colorDisplay;
     @FXML

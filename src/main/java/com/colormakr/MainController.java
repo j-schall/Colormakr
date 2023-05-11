@@ -216,6 +216,7 @@ public class MainController implements Initializable {
 
                 int i = 1;
                 while (rs.next()) {
+
                     String hex = rs.getString(1);
                     switch (i) {
                         case 1:
@@ -237,6 +238,8 @@ public class MainController implements Initializable {
                     i++;
                 }
                 AnchorPane[] panes = {savedColor1, savedColor2, savedColor3, savedColor4, savedColor5};
+
+                deleteRows();
 
                 Timeline line = new Timeline(new KeyFrame(Duration.millis(200), e -> {
                     String hex = txtFieldHex.getText();
@@ -260,15 +263,35 @@ public class MainController implements Initializable {
 
     }
 
-    private void deleteColor(String hex) {
+    private void deleteRows() throws SQLException {
         try {
             mainConn = SQLiteJDBC.connection();
-            mainStmt = mainConn.createStatement();
+            mainConn.setAutoCommit(false);
 
-            String cmd = "DELETE FROM colors WHERE (Hex) = ('" + hex + "')";
-            mainStmt.executeUpdate(cmd);
+            ResultSet rSet = mainStmt.executeQuery("SELECT COUNT(*) FROM colors");
+            while (rSet.next()) {
+                int rows = rSet.getRow();
+
+                if (rows > 5) {
+                    mainStmt.executeUpdate("DELETE FROM colors WHERE COUNT(*) = 1");
+                }
+            }
+            mainConn.commit();
         } catch (SQLException e) {
-            e.printStackTrace();
+            if (mainConn != null) {
+                try {
+                    mainConn.rollback();
+                } catch (SQLException e2) {
+                    e2.printStackTrace();
+                }
+            }
+        } finally {
+            if (mainStmt != null) {
+                mainStmt.close();
+            }
+        }
+        if (mainConn != null) {
+            mainConn.setAutoCommit(true);
         }
     }
 }

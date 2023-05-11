@@ -53,7 +53,6 @@ public class MainController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
         try {
             queryColor();
         } catch (SQLException e) {
@@ -205,7 +204,6 @@ public class MainController implements Initializable {
 
             String queryCmd = "SELECT * FROM colors";
             ResultSet rSet = mainStmt.executeQuery(queryCmd);
-            AnchorPane[] savedColors = {savedColor1, savedColor2, savedColor3, savedColor4, savedColor5};
 
             // Datenbank wird ausgelesen und die Daten in Hex-Form werden den Anchorpanes "savedColor", als Hintergrund festgelegt, damit man die letzten fünf Farben auswählen kann.
             while (rSet.next()) {

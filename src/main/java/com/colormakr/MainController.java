@@ -52,6 +52,7 @@ public class MainController implements Initializable {
     private Color color = null;
     private Connection mainConn = null;
     private Statement mainStmt;
+    private int currentIndex = 0;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -166,18 +167,37 @@ public class MainController implements Initializable {
     @FXML
     void saveInDB(ActionEvent event) throws SQLException {
         String hex = txtFieldHex.getText();
-        saveColor(hex);
-    }
-
-    private void saveColor(String hex) {
         try {
-            mainConn = SQLiteJDBC.connection();
-            mainStmt = mainConn.createStatement();
-
-            String cmd = "INSERT INTO colors (Hex) VALUES ('" + hex + "')";
-            mainStmt.executeUpdate(cmd);
+            saveColor(hex);
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void saveColor(String hex) throws SQLException {
+        Statement stmt = null;
+        try {
+            mainConn = SQLiteJDBC.connection();
+            mainConn.setAutoCommit(false);
+
+            stmt = mainConn.createStatement();
+            stmt.executeUpdate("INSERT INTO colors (Hex) VALUES ('" + hex + "')");
+            mainConn.commit();
+        } catch (SQLException e) {
+            if (mainConn != null) {
+                try {
+                    mainConn.rollback();
+                } catch (SQLException e2) {
+                    e2.printStackTrace();
+                }
+            }
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+        }
+        if (mainConn != null) {
+            mainConn.setAutoCommit(true);
         }
     }
 
@@ -192,66 +212,52 @@ public class MainController implements Initializable {
 
             // Datenbank wird ausgelesen und die Daten in Hex-Form werden den Anchorpanes "savedColor", als Hintergrund festgelegt, damit man die letzten fünf Farben auswählen kann.
             while (rSet.next()) {
-                String color = rSet.getString(1);
+                ResultSet rs = mainStmt.executeQuery("SELECT * FROM colors ORDER BY Hex DESC LIMIT 5");
 
-                if (savedColor1.getStyle().equals("")) {
-                    savedColor1.setStyle("-fx-background-color: " + color + ";");
-                } else if (savedColor2.getStyle().equals("")) {
-                    savedColor2.setStyle("-fx-background-color: " + color + ";");
-                } else if (savedColor3.getStyle().equals("")) {
-                    savedColor3.setStyle("-fx-background-color: " + color + ";");
-                } else if (savedColor4.getStyle().equals("")) {
-                    savedColor4.setStyle("-fx-background-color: " + color + ";");
-                } else if (savedColor5.getStyle().equals("")) {
-                    savedColor5.setStyle("-fx-background-color: " + color + ";");
+                int i = 1;
+                while (rs.next()) {
+                    String hex = rs.getString(1);
+                    switch (i) {
+                        case 1:
+                            savedColor1.setStyle("-fx-background-color: " + hex + ";");
+                            break;
+                        case 2:
+                            savedColor2.setStyle("-fx-background-color: " + hex + ";");
+                            break;
+                        case 3:
+                            savedColor3.setStyle("-fx-background-color: " + hex + ";");
+                            break;
+                        case 4:
+                            savedColor4.setStyle("-fx-background-color: " + hex + ";");
+                            break;
+                        case 5:
+                            savedColor5.setStyle("-fx-background-color: " + hex + ";");
+                            break;
+                    }
+                    i++;
                 }
-                mainStmt.close();
-
                 AnchorPane[] panes = {savedColor1, savedColor2, savedColor3, savedColor4, savedColor5};
 
-                String displayRowCmd = "SELECT COUNT(*)";
-                ResultSet resultSet = mainStmt.executeQuery(displayRowCmd);
-
-                while(resultSet.next()) {
-                    int rows = resultSet.getInt(1);
-                    if (rows > 5) {
-
-                    }
-                }
-
-                for (AnchorPane pane : panes) {
-                    if (!pane.getStyle().equals("")) {
-                        Timeline line = new Timeline(new KeyFrame(Duration.millis(200), e -> {
-                            String hex = txtFieldHex.getText();
-
-                            Platform.runLater(() -> {
-                                saveColor(hex);
-                                pane.setStyle("-fx-background-color: " + hex + ";");
-                            });
-                        }));
-                    } else {
-                        break;
-                    }
-                }
-
-                /*
                 Timeline line = new Timeline(new KeyFrame(Duration.millis(200), e -> {
                     String hex = txtFieldHex.getText();
-                    saveButton.setOnMouseClicked(event -> {
-                        Platform.runLater(() -> {
+                    if (currentIndex < panes.length && saveButton.isPressed()) {
+                        try {
                             saveColor(hex);
-                        });
-
-                    });
+                        } catch (SQLException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                        panes[currentIndex].setStyle("-fx-background-color: " + hex + ";");
+                        currentIndex++;
+                    }
                 }));
                 line.setCycleCount(Timeline.INDEFINITE);
                 line.play();
                 break;
-                 */
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
     }
 
     private void deleteColor(String hex) {

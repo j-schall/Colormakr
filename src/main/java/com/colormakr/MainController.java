@@ -1,6 +1,6 @@
 package com.colormakr;
 
-import com.colormakr.database.SQLiteJDBC;
+import com.colormakr.database.JDBC;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -173,11 +173,11 @@ public class MainController implements Initializable {
     private void saveColor(String hex) throws SQLException {
         Statement stmt = null;
         try {
-            mainConn = SQLiteJDBC.connection();
+            mainConn = JDBC.connection();
             mainConn.setAutoCommit(false);
 
             stmt = mainConn.createStatement();
-            stmt.executeUpdate("INSERT INTO colors (Hex) VALUES ('" + hex + "')");
+            stmt.executeUpdate("INSERT INTO color (Hex) VALUES ('" + hex + "')");
             mainConn.commit();
         } catch (SQLException e) {
             if (mainConn != null) {
@@ -199,15 +199,15 @@ public class MainController implements Initializable {
 
     public void queryColor() throws SQLException {
         try {
-            mainConn = SQLiteJDBC.connection();
+            mainConn = JDBC.connection();
             mainStmt = mainConn.createStatement();
 
-            String queryCmd = "SELECT * FROM colors";
+            String queryCmd = "SELECT * FROM color";
             ResultSet rSet = mainStmt.executeQuery(queryCmd);
 
             // Datenbank wird ausgelesen und die Daten in Hex-Form werden den Anchorpanes "savedColor", als Hintergrund festgelegt, damit man die letzten fünf Farben auswählen kann.
             while (rSet.next()) {
-                ResultSet rs = mainStmt.executeQuery("SELECT * FROM colors ORDER BY Hex DESC LIMIT 5");
+                ResultSet rs = mainStmt.executeQuery("SELECT * FROM color ORDER BY Hex DESC LIMIT 5");
 
                 int i = 1;
                 while (rs.next()) {
@@ -263,10 +263,10 @@ public class MainController implements Initializable {
 
     private void deleteRows() throws SQLException {
         try {
-            mainConn = SQLiteJDBC.connection();
+            mainConn = JDBC.connection();
             mainConn.setAutoCommit(false);
 
-            ResultSet rSet = mainStmt.executeQuery("SELECT COUNT(*) FROM colors");
+            ResultSet rSet = mainStmt.executeQuery("SELECT COUNT(*) FROM color");
             while (rSet.next()) {
                 int rows = rSet.getRow();
 

@@ -234,11 +234,14 @@ public class MainController implements Initializable {
                 }
                 AnchorPane[] panes = {savedColor1, savedColor2, savedColor3, savedColor4, savedColor5};
 
-                deleteRows();
-
                 Timeline line = new Timeline(new KeyFrame(Duration.millis(200), e -> {
                     String hex = txtFieldHex.getText();
                     if (currentIndex < panes.length && saveButton.isPressed()) {
+                        try {
+                            deleteRows();
+                        } catch (SQLException ex) {
+                            throw new RuntimeException(ex);
+                        }
                         try {
                             saveColor(hex);
                         } catch (SQLException ex) {
@@ -268,7 +271,9 @@ public class MainController implements Initializable {
                 int rows = rSet.getRow();
 
                 if (rows > 5) {
-                    mainStmt.executeUpdate("DELETE FROM colors WHERE COUNT(*) = 1");
+                    System.out.println(rows);
+                } else {
+                    System.out.println("Kleiner als 5");
                 }
             }
             mainConn.commit();

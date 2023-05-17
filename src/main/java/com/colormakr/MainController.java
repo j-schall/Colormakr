@@ -50,6 +50,7 @@ public class MainController implements Initializable {
     private Connection mainConn = null;
     private Statement mainStmt;
     private int currentIndex = 0;
+    private AnchorPane[] panes = {savedColor1, savedColor2, savedColor3, savedColor4, savedColor5};
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -216,23 +217,44 @@ public class MainController implements Initializable {
                     switch (i) {
                         case 1:
                             savedColor1.setStyle("-fx-background-color: " + hex + ";");
+                            savedColor1.setOnMouseClicked(a -> {
+                                txtFieldHex.setText(hex);
+                                txtFieldRGB.setText(hexToRGB(hex));
+                            });
                             break;
                         case 2:
                             savedColor2.setStyle("-fx-background-color: " + hex + ";");
+                            savedColor2.setOnMouseClicked(a -> {
+                                txtFieldHex.setText(hex);
+                                txtFieldRGB.setText(hexToRGB(hex));
+                            });
                             break;
                         case 3:
                             savedColor3.setStyle("-fx-background-color: " + hex + ";");
+                            savedColor3.setOnMouseClicked(a -> {
+                                txtFieldHex.setText(hex);
+                                txtFieldRGB.setText(hexToRGB(hex));
+                            });
                             break;
                         case 4:
                             savedColor4.setStyle("-fx-background-color: " + hex + ";");
+                            savedColor4.setOnMouseClicked(a -> {
+                                txtFieldHex.setText(hex);
+                                txtFieldRGB.setText(hexToRGB(hex));
+                            });
                             break;
                         case 5:
                             savedColor5.setStyle("-fx-background-color: " + hex + ";");
+                            savedColor5.setOnMouseClicked(a -> {
+                                txtFieldHex.setText(hex);
+                                txtFieldRGB.setText(hexToRGB(hex));
+                            });
                             break;
                     }
                     i++;
+
+
                 }
-                AnchorPane[] panes = {savedColor1, savedColor2, savedColor3, savedColor4, savedColor5};
 
                 Timeline line = new Timeline(new KeyFrame(Duration.millis(200), e -> {
                     String hex = txtFieldHex.getText();
@@ -258,7 +280,6 @@ public class MainController implements Initializable {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
     }
 
     private void deleteRows() throws SQLException {

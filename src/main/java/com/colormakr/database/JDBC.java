@@ -8,7 +8,7 @@ public class JDBC {
         Connection conn;
         try {
             Class.forName("org.postgresql.Driver");
-            conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/colors", "postgres", "iwidss4m!");
+            conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/colors", "postgres", "iwidss4m");
             return conn;
         } catch (Exception e) {
             e.printStackTrace();

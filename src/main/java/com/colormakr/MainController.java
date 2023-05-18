@@ -208,11 +208,11 @@ public class MainController implements Initializable {
 
             // Datenbank wird ausgelesen und die Daten in Hex-Form werden den Anchorpanes "savedColor", als Hintergrund festgelegt, damit man die letzten fünf Farben auswählen kann.
             while (rSet.next()) {
-                ResultSet rs = mainStmt.executeQuery("SELECT * FROM color ORDER BY Hex DESC LIMIT 5");
+                ResultSet rs = mainStmt.executeQuery("SELECT * FROM color");
 
                 int i = 1;
+                int count = 1;
                 while (rs.next()) {
-
                     String hex = rs.getString(1);
                     switch (i) {
                         case 1:
@@ -221,6 +221,7 @@ public class MainController implements Initializable {
                                 txtFieldHex.setText(hex);
                                 txtFieldRGB.setText(hexToRGB(hex));
                             });
+                            count++;
                             break;
                         case 2:
                             savedColor2.setStyle("-fx-background-color: " + hex + ";");
@@ -228,6 +229,7 @@ public class MainController implements Initializable {
                                 txtFieldHex.setText(hex);
                                 txtFieldRGB.setText(hexToRGB(hex));
                             });
+                            count++;
                             break;
                         case 3:
                             savedColor3.setStyle("-fx-background-color: " + hex + ";");
@@ -235,6 +237,7 @@ public class MainController implements Initializable {
                                 txtFieldHex.setText(hex);
                                 txtFieldRGB.setText(hexToRGB(hex));
                             });
+                            count++;
                             break;
                         case 4:
                             savedColor4.setStyle("-fx-background-color: " + hex + ";");
@@ -242,6 +245,7 @@ public class MainController implements Initializable {
                                 txtFieldHex.setText(hex);
                                 txtFieldRGB.setText(hexToRGB(hex));
                             });
+                            count++;
                             break;
                         case 5:
                             savedColor5.setStyle("-fx-background-color: " + hex + ";");
@@ -249,28 +253,33 @@ public class MainController implements Initializable {
                                 txtFieldHex.setText(hex);
                                 txtFieldRGB.setText(hexToRGB(hex));
                             });
+                            count++;
                             break;
                     }
                     i++;
-
-
+                    System.out.println(count);
                 }
 
+                int finalCount = count;
                 Timeline line = new Timeline(new KeyFrame(Duration.millis(200), e -> {
                     String hex = txtFieldHex.getText();
                     if (currentIndex < panes.length && saveButton.isPressed()) {
-                        try {
-                            deleteRows();
-                        } catch (SQLException ex) {
-                            throw new RuntimeException(ex);
-                        }
                         try {
                             saveColor(hex);
                         } catch (SQLException ex) {
                             throw new RuntimeException(ex);
                         }
-                        panes[currentIndex].setStyle("-fx-background-color: " + hex + ";");
-                        currentIndex++;
+
+                        if (finalCount > 5) {
+                            try {
+                                deleteRows();
+                                panes[currentIndex].setStyle("-fx-background-color: " + hex + ";");
+                                currentIndex++;
+                            } catch (SQLException ex) {
+                                throw new RuntimeException(ex);
+                            }
+                        }
+
                     }
                 }));
                 line.setCycleCount(Timeline.INDEFINITE);
@@ -283,20 +292,14 @@ public class MainController implements Initializable {
     }
 
     private void deleteRows() throws SQLException {
+        Statement stmt = null;
         try {
             mainConn = JDBC.connection();
             mainConn.setAutoCommit(false);
 
-            ResultSet rSet = mainStmt.executeQuery("SELECT COUNT(*) FROM color");
-            while (rSet.next()) {
-                int rows = rSet.getRow();
+            stmt = mainConn.createStatement();
+            stmt.executeUpdate("DELETE FROM color");
 
-                if (rows > 5) {
-                    System.out.println(rows);
-                } else {
-                    System.out.println("Kleiner als 5");
-                }
-            }
             mainConn.commit();
         } catch (SQLException e) {
             if (mainConn != null) {
@@ -307,8 +310,8 @@ public class MainController implements Initializable {
                 }
             }
         } finally {
-            if (mainStmt != null) {
-                mainStmt.close();
+            if (stmt != null) {
+                stmt.close();
             }
         }
         if (mainConn != null) {

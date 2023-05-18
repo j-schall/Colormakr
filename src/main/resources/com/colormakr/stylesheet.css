@@ -23,3 +23,8 @@
     -fx-scale-y: 1.2;
     -fx-border-color: black;
 }
+#sButton {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+    -fx-font-family: "Arial";
+}

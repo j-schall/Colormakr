@@ -19,7 +19,7 @@
          <graphic>
             <ImageView fitHeight="13.0" fitWidth="13.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@/com/colormakr/save_icon.png" />
+                  <Image url="@/com/colormakr/img/save_icon.png" />
                </image>
             </ImageView>
          </graphic>

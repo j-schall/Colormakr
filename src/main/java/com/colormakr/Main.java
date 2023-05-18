@@ -21,7 +21,7 @@ public class Main extends Application {
 
         primaryStage.setScene(mainScene);
         primaryStage.setTitle("Colormakr");
-        primaryStage.getIcons().add(new Image(Main.class.getResourceAsStream("icon.png")));
+        primaryStage.getIcons().add(new Image(Main.class.getResourceAsStream("/com/colormakr/img/icon.png")));
         primaryStage.setResizable(false);
         primaryStage.show();
     }

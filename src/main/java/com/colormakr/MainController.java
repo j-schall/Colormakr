@@ -123,14 +123,9 @@ public class MainController implements Initializable {
             timeline.setCycleCount(Timeline.INDEFINITE);
             timeline.play();
 
-            Time millisStop = new Time(System.currentTimeMillis());
-
-            // Abstand wird ausgerechnet, wie lange der Button nicht mehr gedrückt wurde
-            long millis = millisStop.getTime() - millisStart.getTime();
-
             // Wenn der SuchButton gedrückt wird, wird die Farbe die in Hex-Dezimal Form steht, in die Datenbank gespeichert
             sButton.setOnMouseClicked(event -> {
-                // Solange der Button nicht nochmal gedrückt wurde, soll das Programm nicht weiterlaufen
+                // As long as the button was not pressed again, the program should not continue
                 clickCount++;
                 if (clickCount == 1) {
                     sButton.setText("Search");
@@ -143,7 +138,7 @@ public class MainController implements Initializable {
 
             });
 
-            // Wenn ALT gedrückt wird soll das selbe wie, wenn der sButton gedrückt wurde, passieren
+            // When ALT is pressed, the same should happen as when the sButton was pressed.
             scene = Main.mainScene;
             scene.setOnKeyPressed(e -> {
                 if (e.getCode() == KeyCode.ALT) {
@@ -206,7 +201,8 @@ public class MainController implements Initializable {
             String queryCmd = "SELECT * FROM color";
             ResultSet rSet = mainStmt.executeQuery(queryCmd);
 
-            // Datenbank wird ausgelesen und die Daten in Hex-Form werden den Anchorpanes "savedColor", als Hintergrund festgelegt, damit man die letzten fünf Farben auswählen kann.
+            // Database is read and the data in hex form are set to the anchorpanes "savedColor",
+            // as background, so that one can select the last five colors
             while (rSet.next()) {
                 ResultSet rs = mainStmt.executeQuery("SELECT * FROM color");
 
@@ -214,6 +210,7 @@ public class MainController implements Initializable {
                 int count = 1;
                 while (rs.next()) {
                     String hex = rs.getString(1);
+
                     switch (i) {
                         case 1:
                             savedColor1.setStyle("-fx-background-color: " + hex + ";");
@@ -257,7 +254,6 @@ public class MainController implements Initializable {
                             break;
                     }
                     i++;
-                    System.out.println(count);
                 }
 
                 int finalCount = count;
@@ -273,11 +269,11 @@ public class MainController implements Initializable {
                         if (finalCount > 5) {
                             try {
                                 deleteRows();
-                                panes[currentIndex].setStyle("-fx-background-color: " + hex + ";");
-                                currentIndex++;
                             } catch (SQLException ex) {
                                 throw new RuntimeException(ex);
                             }
+                            panes[currentIndex].setStyle("-fx-background-color: " + hex + ";");
+                            currentIndex++;
                         }
 
                     }
@@ -291,6 +287,8 @@ public class MainController implements Initializable {
         }
     }
 
+    // This method will be called, when all AnchorPanes with the saved colors have already a background color,
+    // so they will be deleted from the database
     private void deleteRows() throws SQLException {
         Statement stmt = null;
         try {

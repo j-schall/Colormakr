@@ -1,8 +1,5 @@
 package com.colormakr.database;
 
-import com.colormakr.Main;
-import javafx.application.Platform;
-
 public class DockerStarter {
     public static void main(String[] args) {
         try {

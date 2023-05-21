@@ -20,6 +20,7 @@ public class Main extends Application {
         mainScene = new Scene(loader.load());
         mainScene.getStylesheets().add(Main.class.getResource("stylesheet.css").toExternalForm());
 
+        // Start the Docker Engine
         DockerStarter.main(null);
 
         primaryStage.setScene(mainScene);

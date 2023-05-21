@@ -1,5 +1,6 @@
 package com.colormakr;
 
+import com.colormakr.database.DockerStarter;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -18,6 +19,8 @@ public class Main extends Application {
         FXMLLoader loader = new FXMLLoader(Main.class.getResource("MainStage.fxml"));
         mainScene = new Scene(loader.load());
         mainScene.getStylesheets().add(Main.class.getResource("stylesheet.css").toExternalForm());
+
+        DockerStarter.main(null);
 
         primaryStage.setScene(mainScene);
         primaryStage.setTitle("Colormakr");

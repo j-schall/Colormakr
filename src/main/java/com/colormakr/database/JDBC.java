@@ -14,6 +14,5 @@ public class JDBC {
             e.printStackTrace();
             return null;
         }
-
     }
 }

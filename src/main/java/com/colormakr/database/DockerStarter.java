@@ -1,7 +1,7 @@
 package com.colormakr.database;
 
 public class DockerStarter {
-    public static void main(String[] args) {
+    public static void start() {
         try {
             ProcessBuilder processBuilder = new ProcessBuilder("docker", "start", "colormakr-postgres-1");
             Process process = processBuilder.start();
@@ -9,12 +9,9 @@ public class DockerStarter {
             int exitCode = process.waitFor();
             if (exitCode == 0) {
                 System.out.println("Der Docker-Container wurde erfolgreich gestartet");
-            } else {
-                System.out.println("Es gab ein Fehler beim Starten des Docker-Containers " + exitCode);
             }
-        } catch(Exception e) {
-           e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
     }
 }

@@ -14,14 +14,13 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        window = primaryStage;
+        // Start the Docker Engine
+        DockerStarter.start();
 
+        window = primaryStage;
         FXMLLoader loader = new FXMLLoader(Main.class.getResource("MainStage.fxml"));
         mainScene = new Scene(loader.load());
         mainScene.getStylesheets().add(Main.class.getResource("stylesheet.css").toExternalForm());
-
-        // Start the Docker Engine
-        DockerStarter.main(null);
 
         primaryStage.setScene(mainScene);
         primaryStage.setTitle("Colormakr");
@@ -29,6 +28,7 @@ public class Main extends Application {
         primaryStage.setResizable(false);
         primaryStage.show();
     }
+
     public static void main(String[] args) {
         launch(args);
     }

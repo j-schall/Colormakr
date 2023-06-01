@@ -156,6 +156,7 @@ public class MainController implements Initializable {
         });
     }
 
+    // If the saveButton is pressed than the color will be saved in the database
     @FXML
     void saveInDB(ActionEvent event) throws SQLException {
         String hex = txtFieldHex.getText();

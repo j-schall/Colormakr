@@ -21,7 +21,7 @@ public class DockerStarter {
                     .withDockerHttpClient(httpClient)
                     .build();
 
-            String containerId = "505e5ace383a"; // This is the container ID of the PostgreSQL Database
+            String containerId = "colors"; // This is the container ID of the PostgreSQL Database
             dockerClient.startContainerCmd(containerId).exec(); // Execute the container
         } catch (NotModifiedException e) {
             StackTraceElement[] response = e.getStackTrace();

@@ -81,9 +81,6 @@ public class MainController implements Initializable {
     }
 
     private void getMouseColor() throws AWTException {
-        Time millisStart = new Time(System.currentTimeMillis());
-        String finalHex = null;
-
         sButton.setOnMouseClicked(MouseEvent -> {
             sButton.setText("Stop");
 
@@ -95,7 +92,7 @@ public class MainController implements Initializable {
                 Point pos = mouseInfo.getLocation();
                 int x = (int) pos.getX();
                 int y = (int) pos.getY();
-                Robot robot = null;
+                Robot robot;
 
                 try {
                     robot = new Robot();
@@ -156,27 +153,33 @@ public class MainController implements Initializable {
         });
     }
 
-    // If the saveButton is pressed than the color will be saved in the database
     @FXML
-    void saveInDB(ActionEvent event) throws SQLException {
+    void saveInDB() {
+        // If the saveButton is pressed than the color will be saved in the database
         String hex = txtFieldHex.getText();
-        try {
-            saveColor(hex);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+
+        Platform.runLater(() -> {
+            try {
+                saveColor(hex);
+                queryColor();
+            } catch (SQLException e) {
+                System.out.println("Connection refused: " + e.getErrorCode());
+            }
+        });
     }
 
     private void saveColor(String hex) throws SQLException {
         Statement stmt = null;
         try {
             mainConn = JDBC.connection();
-            mainConn.setAutoCommit(false);
-
-            stmt = mainConn.createStatement();
-            stmt.executeUpdate("INSERT INTO color (Hex) VALUES ('" + hex + "')");
-            mainConn.commit();
+            if (mainConn != null) {
+                mainConn.setAutoCommit(false);
+                stmt = mainConn.createStatement();
+                stmt.executeUpdate("INSERT INTO color (hex) VALUES ('" + hex + "')");
+                mainConn.commit();
+            }
         } catch (SQLException e) {
+            e.printStackTrace();
             if (mainConn != null) {
                 try {
                     mainConn.rollback();
@@ -197,62 +200,61 @@ public class MainController implements Initializable {
     public void queryColor() throws SQLException {
         try {
             mainConn = JDBC.connection();
-            mainStmt = mainConn.createStatement();
 
-            String queryCmd = "SELECT * FROM color";
-            ResultSet rSet = mainStmt.executeQuery(queryCmd);
+            if (mainConn != null) {
+                mainStmt = mainConn.createStatement();
 
-            // Database is read and the data in hex form are set to the anchorpanes "savedColor",
-            // as background, so that one can select the last five colors
-            while (rSet.next()) {
-                ResultSet rs = mainStmt.executeQuery("SELECT * FROM color");
+                String queryCmd = "SELECT * FROM color";
+                ResultSet rSet = mainStmt.executeQuery(queryCmd);
 
+                // Database is read and the data in hex form are set to the anchorpanes "savedColor",
+                // as background, so that one can select the last five colors
                 int i = 1;
                 int count = 1;
-                while (rs.next()) {
-                    String hex = rs.getString(1);
-
+                while (rSet.next()) {
+                    String hex = rSet.getString(1);
                     switch (i) {
-                        case 1:
-                            savedColor1.setStyle("-fx-background-color: " + hex + ";");
+                        case 1 -> {
+                            savedColor1.setStyle("-fx-background-color: " + hex);
                             savedColor1.setOnMouseClicked(a -> {
                                 txtFieldHex.setText(hex);
                                 txtFieldRGB.setText(hexToRGB(hex));
                             });
                             count++;
-                            break;
-                        case 2:
-                            savedColor2.setStyle("-fx-background-color: " + hex + ";");
+                        }
+                        case 2 -> {
+                            savedColor2.setStyle("-fx-background-color: " + hex);
                             savedColor2.setOnMouseClicked(a -> {
                                 txtFieldHex.setText(hex);
                                 txtFieldRGB.setText(hexToRGB(hex));
                             });
+
                             count++;
-                            break;
-                        case 3:
-                            savedColor3.setStyle("-fx-background-color: " + hex + ";");
+                        }
+                        case 3 -> {
+                            savedColor3.setStyle("-fx-background-color: " + hex);
                             savedColor3.setOnMouseClicked(a -> {
                                 txtFieldHex.setText(hex);
                                 txtFieldRGB.setText(hexToRGB(hex));
                             });
                             count++;
-                            break;
-                        case 4:
-                            savedColor4.setStyle("-fx-background-color: " + hex + ";");
+                        }
+                        case 4 -> {
+                            savedColor4.setStyle("-fx-background-color: " + hex);
                             savedColor4.setOnMouseClicked(a -> {
                                 txtFieldHex.setText(hex);
                                 txtFieldRGB.setText(hexToRGB(hex));
                             });
                             count++;
-                            break;
-                        case 5:
-                            savedColor5.setStyle("-fx-background-color: " + hex + ";");
+                        }
+                        case 5 -> {
+                            savedColor5.setStyle("-fx-background-color: " + hex);
                             savedColor5.setOnMouseClicked(a -> {
                                 txtFieldHex.setText(hex);
                                 txtFieldRGB.setText(hexToRGB(hex));
                             });
                             count++;
-                            break;
+                        }
                     }
                     i++;
                 }
@@ -281,7 +283,6 @@ public class MainController implements Initializable {
                 }));
                 line.setCycleCount(Timeline.INDEFINITE);
                 line.play();
-                break;
             }
         } catch (SQLException e) {
             e.printStackTrace();

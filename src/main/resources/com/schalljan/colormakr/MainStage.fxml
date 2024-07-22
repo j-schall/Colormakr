@@ -7,7 +7,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="166.0" prefWidth="269.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.colormakr.MainController">
+<AnchorPane prefHeight="166.0" prefWidth="269.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.schalljan.colormakr.MainController">
    <children>
       <ColorPicker fx:id="colorPicker" layoutX="14.0" layoutY="27.0" prefHeight="26.0" prefWidth="143.0" />
       <TextField fx:id="txtFieldHex" layoutX="13.0" layoutY="83.0" prefHeight="26.0" prefWidth="143.0" promptText="Color in Hex" />
@@ -19,7 +19,7 @@
          <graphic>
             <ImageView fitHeight="13.0" fitWidth="13.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@/com/colormakr/img/save_icon.png" />
+                  <Image url="@/com/schalljan/colormakr/img/save_icon.png" />
                </image>
             </ImageView>
          </graphic>

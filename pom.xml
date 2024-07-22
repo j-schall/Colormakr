@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -6,7 +5,7 @@
 
     <groupId>com.colormakr</groupId>
     <artifactId>Colormakr</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>Colormakr</name>
 
     <properties>
@@ -39,24 +38,9 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>42.5.4</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.docker-java</groupId>
-            <artifactId>docker-java</artifactId>
-            <version>3.3.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>2.0.7</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.docker-java</groupId>
-            <artifactId>docker-java-transport-httpclient5</artifactId>
-            <version>3.2.10</version>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.11.0</version>
         </dependency>
     </dependencies>
 
@@ -79,30 +63,10 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.colormakr.Main</mainClass>
+                            <mainClass>com.schalljan.colormakr.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.openjfx</groupId>
-                <artifactId>javafx-maven-plugin</artifactId>
-                <version>0.0.8</version>
-                <executions>
-                    <execution>
-                        <id>default-cli</id>
-                        <configuration>
-                            <mainClass>com.colormakr.Main</mainClass>
-                            <launcher>app</launcher>
-                            <jlinkZipName>app</jlinkZipName>
-                            <jlinkImageName>app</jlinkImageName>
-                            <noManPages>true</noManPages>
-                            <stripDebug>true</stripDebug>
-                            <noHeaderFiles>true</noHeaderFiles>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
 
             <plugin>
@@ -118,15 +82,12 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <shadedArtifactAttached>true
-                    </shadedArtifactAttached>
-                    <shadedClassifierName>shaded</shadedClassifierName>
+                    <createDependencyReducedPom>false</createDependencyReducedPom>
                     <transformers>
                         <transformer
                                 implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                             <manifestEntries>
-                                <Main-Class>com.colormakr.Main</Main-Class>
-                                <Build-Number>1.0</Build-Number>
+                                <Main-Class>com.schalljan.colormakr.Main</Main-Class>
                             </manifestEntries>
                         </transformer>
                     </transformers>
